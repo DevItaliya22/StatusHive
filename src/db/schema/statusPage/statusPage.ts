@@ -1,6 +1,7 @@
 import { desc, relations, sql } from "drizzle-orm";
 import { integer, text, boolean, pgTable,serial,timestamp, varchar } from "drizzle-orm/pg-core";
 import { users } from "../user";
+import { monitors } from "../monitors";
 
 export const statusPage = pgTable("statusPage", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -12,14 +13,14 @@ export const statusPage = pgTable("statusPage", {
 
   published : boolean("published").default(true),
 
-  showMonitorStats : boolean("show_monitor_stats").default(true),
   createdAt: timestamp("created_at"),
   updatedAt: timestamp("updated_at")
 });
 
-export const statusRelation = relations(statusPage,({one})=>({
+export const statusRelation = relations(statusPage,({one,many})=>({
     user : one(users,{
       fields: [statusPage.userId],
           references: [users.id],
-    })
+    }),
+    monitor : many(monitors)
 }))

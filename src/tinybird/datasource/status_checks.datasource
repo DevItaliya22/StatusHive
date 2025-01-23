@@ -1,0 +1,21 @@
+# mode: append
+# description: Website monitoring status checks data source
+# tags: monitoring, performance
+
+SCHEMA >
+    `timestamp` DateTime,
+    `monitor_id` UInt32,
+    `status_code` UInt16,
+    `response_time` UInt32,
+    `region` LowCardinality(String)
+
+ENGINE MergeTree
+ENGINE_PARTITION_KEY toYYYYMM(timestamp)
+ENGINE_SORTING_KEY timestamp, monitor_id, region
+ENGINE_TTL timestamp + toIntervalDay(90)
+ENGINE_SETTINGS index_granularity=4096
+
+INDEXES >
+    INDEX idx_monitor monitor_id TYPE bloom_filter GRANULARITY 2,
+    INDEX idx_region region TYPE bloom_filter GRANULARITY 2,
+    INDEX idx_status_code status_code TYPE bloom_filter GRANULARITY 3

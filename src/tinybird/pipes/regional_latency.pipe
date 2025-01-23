@@ -1,0 +1,23 @@
+# description: Get time-series latency data by region
+# tags: monitoring, analytics
+
+NODE latency_timeseries
+# param $monitor_id: UInt32
+# param $region: String
+# param $days: UInt32 = 7
+
+SQL >
+SELECT
+    toStartOfInterval(timestamp, INTERVAL 1 DAY) AS time_bucket,
+    region,
+    avg(response_time) AS avg_latency,
+    quantiles(0.95)(response_time) AS p95_latency,
+    countIf(status_code = 200) AS success_count,
+    countIf(status_code >= 400) AS error_count
+FROM status_checks
+WHERE
+    monitor_id = {{ $monitor_id }}
+    AND region = {{ $region }}
+    AND timestamp >= now() - INTERVAL {{ $days }} DAY
+GROUP BY time_bucket, region
+ORDER BY time_bucket ASC

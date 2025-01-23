@@ -15,6 +15,13 @@
       "when": 1737631950580,
       "tag": "0001_violet_wallop",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1737636661675,
+      "tag": "0002_boring_lady_vermin",
+      "breakpoints": true
     }
   ]
 }

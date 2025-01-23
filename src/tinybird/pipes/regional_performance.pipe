@@ -1,0 +1,22 @@
+# description: Get regional performance statistics
+# tags: monitoring, analytics
+
+NODE regional_performance
+# param $monitor_id: UInt32
+# param $days: UInt32 = 7
+
+SQL >
+SELECT
+    region,
+    max(response_time) AS max_latency,
+    min(response_time) AS min_latency,
+    avg(response_time) AS avg_latency,
+    count() AS total_checks,
+    countIf(status_code = 200) AS success_rate,
+    toUnixTimestamp(max(timestamp)) AS last_check
+FROM status_checks
+WHERE
+    monitor_id = {{ $monitor_id }}
+    AND timestamp >= now() - INTERVAL {{ $days }} DAY
+GROUP BY region
+ORDER BY avg_latency DESC
