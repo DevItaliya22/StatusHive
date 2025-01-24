@@ -3,7 +3,7 @@ import { Tinybird } from "@chronark/zod-bird";
 import { z } from "zod";
 
 console.log(env.TINYBIRD_TOKEN);
-const tb = new Tinybird({ token: env.TINYBIRD_TOKEN});
+const tb = new Tinybird({ token: env.TINYBIRD_TOKEN, baseUrl: env.TINYBIRD_URL });
 
 // Data Ingestion
 export const publishStatusCheck = tb.buildIngestEndpoint({
@@ -24,18 +24,9 @@ export const getMonitorAggregates = tb.buildPipe({
     monitor_id: z.number().int(),
     days: z.number().int().default(7),
   }),
-  data: z.array(
-    z.object({
-      status_code: z.number(),
-      total_requests: z.number(),
-      avg_latency: z.number(),
-      min_latency: z.number(),
-      max_latency: z.number(),
-      success_count: z.number(),
-      error_count: z.number(),
-    })
-  ),
+  data: z.any()
 });
+
 
 export const getRegionalLatency = tb.buildPipe({
   pipe: "regional_latency__v1",

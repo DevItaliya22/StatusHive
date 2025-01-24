@@ -2,13 +2,16 @@
   "name": "next-boilerplate",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "npm run db:gen && next build",
     "start": "next start",
     "lint": "next lint",
     "db:gen": "npx drizzle-kit generate",
-    "db:push": "npx drizzle-kit push"
+    "db:push": "npx drizzle-kit push",
+    "tb:build":"tsc -p tsconfig.build.json",
+    "tb:seed":"node ./dist/tinybird/seed.js"
   },
   "dependencies": {
     "@chronark/zod-bird": "^0.3.10",

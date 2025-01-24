@@ -3,11 +3,11 @@
 # tags: monitoring, performance
 
 SCHEMA >
-    `timestamp` DateTime,
-    `monitor_id` UInt32,
-    `status_code` UInt16,
-    `response_time` UInt32,
-    `region` LowCardinality(String)
+    `timestamp` DateTime `json:$.timestamp`,
+    `monitor_id` UInt32 `json:$.monitor_id`,
+    `status_code` UInt16 `json:$.status_code`,
+    `response_time` UInt32 `json:$.response_time`,
+    `region` LowCardinality(String) `json:$.region`
 
 ENGINE MergeTree
 ENGINE_PARTITION_KEY toYYYYMM(timestamp)

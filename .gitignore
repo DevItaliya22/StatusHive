@@ -10,6 +10,8 @@
 !.yarn/releases
 !.yarn/versions
 
+dist
+
 # testing
 /coverage
 .tinyb
@@ -19,7 +21,7 @@
 
 # production
 /build
-
+Todo.txt
 # misc
 .DS_Store
 *.pem

@@ -1,9 +1,9 @@
-# description: Get regional performance statistics
+# description: Get latency statistics by region
 # tags: monitoring, analytics
 
-NODE regional_performance
-# param $monitor_id: UInt32
-# param $days: UInt32 = 7
+NODE region_latency_stats
+# param monitor_id: UInt32
+# param days: UInt32 = 7
 
 SQL >
 SELECT
@@ -16,7 +16,7 @@ SELECT
     toUnixTimestamp(max(timestamp)) AS last_check
 FROM status_checks
 WHERE
-    monitor_id = {{ $monitor_id }}
-    AND timestamp >= now() - INTERVAL {{ $days }} DAY
+    monitor_id = {{ String(monitor_id, '1', required=True) }}
+    AND timestamp >= now() - INTERVAL {{ Int32(days, '7', required=True) }} DAY
 GROUP BY region
 ORDER BY avg_latency DESC

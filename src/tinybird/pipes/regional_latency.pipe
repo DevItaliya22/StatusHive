@@ -2,22 +2,27 @@
 # tags: monitoring, analytics
 
 NODE latency_timeseries
-# param $monitor_id: UInt32
-# param $region: String
-# param $days: UInt32 = 7
+# param monitor_id: UInt32
+# param region: String
+# param days: UInt32 = 7
 
 SQL >
 SELECT
     toStartOfInterval(timestamp, INTERVAL 1 DAY) AS time_bucket,
     region,
     avg(response_time) AS avg_latency,
-    quantiles(0.95)(response_time) AS p95_latency,
+    quantiles(0.95)(response_time) AS p100_latency,
+    quantiles(0.90)(response_time) AS p90_latency,
+    quantiles(0.75)(response_time) AS p75_latency,
+    quantiles(0.50)(response_time) AS p50_latency,
+    quantiles(0.25)(response_time) AS p25_latency,
     countIf(status_code = 200) AS success_count,
-    countIf(status_code >= 400) AS error_count
+    countIf(status_code >= 400) AS error_count,
+    count() as total_req
 FROM status_checks
 WHERE
-    monitor_id = {{ $monitor_id }}
-    AND region = {{ $region }}
-    AND timestamp >= now() - INTERVAL {{ $days }} DAY
+    monitor_id = {{ String(monitor_id, '1', required=True) }}
+    AND region = {{ String(region, 'ap-south', required=True) }}
+    AND timestamp >= now() - INTERVAL {{ Int32(days, '7', required=True) }} DAY
 GROUP BY time_bucket, region
 ORDER BY time_bucket ASC

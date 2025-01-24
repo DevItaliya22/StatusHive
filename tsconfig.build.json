@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "noEmit": false,
+    "emitDeclarationOnly": false,
+    "declaration": true,
+    "sourceMap": true,
+    "incremental": true
+  },
+  "include": ["src/lib", "src/db", "src/tinybird"],
+  "exclude": ["node_modules", "**/*.test.ts", "**/*.test.tsx"]
+}
