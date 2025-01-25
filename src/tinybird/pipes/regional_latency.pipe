@@ -7,6 +7,7 @@ NODE latency_timeseries
 # param days: UInt32 = 7
 
 SQL >
+%
 SELECT
     toStartOfInterval(timestamp, INTERVAL 1 DAY) AS time_bucket,
     region,
@@ -21,7 +22,7 @@ SELECT
     count() as total_req
 FROM status_checks
 WHERE
-    monitor_id = {{ String(monitor_id, '1', required=True) }}
+    monitor_id = {{ UInt32(monitor_id, '1', required=True) }}
     AND region = {{ String(region, 'ap-south', required=True) }}
     AND timestamp >= now() - INTERVAL {{ Int32(days, '7', required=True) }} DAY
 GROUP BY time_bucket, region

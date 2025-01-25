@@ -16,7 +16,6 @@ export const authOptions: AuthOptions = {
         async signIn({ user }) {
             try {
               if (!user.email) return false;
-      
               const existingUser = await db
                 .select()
                 .from(users)

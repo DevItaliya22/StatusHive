@@ -8,9 +8,10 @@ NODE aggregated_stats
 # param limit: Int32 = 100
 
 SQL >
+%
 SELECT 
     status_code,
-    count() AS total_requests,
+    count() AS total_requests22,
     avg(response_time) AS avg_latency,
     min(response_time) AS min_latency,
     max(response_time) AS max_latency,
@@ -18,6 +19,6 @@ SELECT
     countIf(status_code >= 400) AS error_count
 FROM status_checks
 WHERE 
-    monitor_id = {{ String(monitorId, '1', required=True) }}
+    monitor_id = {{ UInt32(monitor_id, '1', required=True) }}
     AND timestamp >= now() - INTERVAL {{ Int32(days,"10",required=True)}} DAY
 GROUP BY status_code
