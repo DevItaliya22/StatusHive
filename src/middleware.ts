@@ -9,11 +9,11 @@ export default async function middleware(req: NextRequest) {
   // if(!session){
   //   return NextResponse.redirect(new URL("/auth/signin", req.url));
   // }
-  
+
   console.log("Middleware called");
 
   const url = req.nextUrl;
-  let hostname = req.headers.get("host")!;
+  const hostname = req.headers.get("host")!;
 
   const subdomain = getSubdomain(hostname, env.BASE_DOMAIN);
   console.log(subdomain);
