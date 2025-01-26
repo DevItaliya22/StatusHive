@@ -1,4 +1,4 @@
-import { env } from "../lib/env";
+import { env } from "../lib/env/env";
 import { Tinybird } from "@chronark/zod-bird";
 import { z } from "zod";
 
