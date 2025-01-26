@@ -8,22 +8,19 @@
     "build": "npm run db:gen && next build",
     "start": "next start",
     "lint": "next lint",
-    "db:gen": "npx drizzle-kit generate",
-    "db:push": "npx drizzle-kit push",
+    "db:gen": "npx prisma generate",
+    "db:push": "npx prisma push",
     "tb:build":"tsc -p tsconfig.build.json",
     "tb:seed":"node ./dist/tinybird/seed.js"
   },
   "dependencies": {
     "@chronark/zod-bird": "^0.3.10",
-    "@neondatabase/serverless": "^0.10.4",
     "data-fns": "^1.1.0",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.38.4",
     "next": "15.1.2",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "resend": "^4.1.1",
     "zod": "^3.24.1"
   },
   "devDependencies": {
