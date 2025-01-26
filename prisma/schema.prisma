@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int        @id @default(autoincrement())
+  name              String?
+  email             String     @unique
+  image             String?
+  createdAt         DateTime?
+  updatedAt         DateTime?
+  subscriptionType  SubscriptionType @default(hobby)
+
+  statusPages       StatusPage[]
+}
+
+model StatusPage {
+  id            Int        @id @default(autoincrement())
+  userId        Int
+  title         String?
+  description   String?    @db.VarChar(1024)
+  
+  subdomain     String?    @unique
+  customDomain  String?    @unique
+  published     Boolean    @default(true)
+  createdAt     DateTime?
+  updatedAt     DateTime?
+
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  monitors      Monitor[]
+
+  @@index([subdomain], name: "statusPage_subdomain_idx")
+  @@index([customDomain], name: "statusPage_custom_domain_idx")
+  @@unique([subdomain, customDomain])
+}
+
+model Monitor {
+  id              Int        @id @default(autoincrement())
+  statusPageId    Int
+  showMonitorStats Boolean   @default(true)
+  active         Boolean    @default(true)
+  url            String?    @db.VarChar(1024)
+  method         MonitorMethodsEnum @default(GET)
+  public         Boolean    @default(true)
+  ttl            Int        @default(5000)
+  createdAt      DateTime?
+  updatedAt      DateTime?
+
+  statusPage     StatusPage @relation(fields: [statusPageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Webhook {
+  id                  Int     @id @default(autoincrement())
+  discordWebhookUrl   String?
+  slackWebhookUrl     String?
+  discordNotificationOn Boolean @default(false)
+  slackNotificationOn Boolean @default(false)
+}
+
+enum MonitorMethodsEnum {
+  GET
+  POST
+}
+
+enum SubscriptionType {
+  hobby
+  pro
+}
