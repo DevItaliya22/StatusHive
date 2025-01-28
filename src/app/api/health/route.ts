@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
-    const { inputValue } = await req.json(); // Parse the JSON body from the request
+    const { inputValue } = await req.json(); 
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
