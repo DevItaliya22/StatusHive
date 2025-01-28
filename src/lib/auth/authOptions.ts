@@ -37,9 +37,6 @@ export const authOptions: AuthOptions = {
     async session({ session }) {
       return session;
     },
-    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-      return `${baseUrl}/dashboard`;
-    },
   },
   secret: env.NEXTAUTH_SECRET,
 };
