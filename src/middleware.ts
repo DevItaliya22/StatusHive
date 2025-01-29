@@ -92,6 +92,12 @@ export default async function middleware(req: NextRequest) {
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ""
   }`;
+  console.log("Hostname",hostname);
+  console.log("path",path); 
+
+  console.log("searchParams",searchParams);
+
+  
 
   // rewrites for app pages
   if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
@@ -110,8 +116,9 @@ export default async function middleware(req: NextRequest) {
   if (
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
+    console.log("Main website - Redirecting / landing page only");
     return NextResponse.rewrite(
-      new URL(`${path === "/" ? "" : path}`, req.url),
+      new URL(`/home${path === "/" ? "" : path}`, req.url),
     );
   }
 
