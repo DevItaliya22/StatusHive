@@ -35,6 +35,7 @@ export default async function middleware(req: NextRequest) {
   // rewrites for app pages
   if (hostname == `app.${process.env.BASE_DOMAIN}`) {
     const session = await getToken({ req });
+    console.log(session , "from app.localhost:3000")
     if (!session && path !== "/auth/signin") {
       return NextResponse.redirect(new URL("/auth/signin", req.url));
     } else if (session && path == "/auth/signin") {
