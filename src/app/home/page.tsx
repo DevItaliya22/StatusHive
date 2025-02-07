@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Star } from "lucide-react";
@@ -10,10 +11,29 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useSession } from "next-auth/react";
 
 export default function LandingPage() {
+  const { data: session } = useSession();
+
   return (
     <div className="min-h-screen bg-white dark:bg-black">
+      <>
+        {session && session.user ? (
+          <>Welcome {session?.user.email}</>
+        ) : (
+          <>Please sign in</>
+        )}
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+      </>
       {/* Header */}
       <header className="flex items-center justify-between px-20 py-10 max-w-6xl mx-auto">
         <Link
@@ -131,7 +151,7 @@ export default function LandingPage() {
           <div
             className="absolute inset-0 rounded-lg pointer-events-none" // Overlay for the border effect
             style={{
-              background: "linear-gradient(to top, white, rgba(255,255,255,0))", // Adjust gradient for shine
+              // background: "linear-gradient(to top, white, rgba(255,255,255,0))", // Adjust gradient for shine
               mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               maskComposite: "xor",
               zIndex: 0, // Place border behind the text

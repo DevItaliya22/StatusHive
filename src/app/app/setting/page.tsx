@@ -7,7 +7,6 @@ function Setting() {
   return (
     <div>Setting
         {session && session.user ? <>Welcome {session?.user.email}</> : <>Please sign in</>}
-
     </div>
   )
 }

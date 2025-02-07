@@ -39,4 +39,15 @@ export const authOptions: AuthOptions = {
     },
   },
   secret: env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+        name: `${env.NEXTAUTH_URL.startsWith('https://') ? "__Secure-": ""}next-auth.session-token`,
+        options: {
+            domain: process.env.NODE_ENV === "development" ? ".localhost" : ".statushive.devitaliya.me",
+            sameSite: 'lax',
+            path: '/',
+            secure: env.NEXTAUTH_URL.startsWith('https://'),
+        }
+    }
+}
 };
