@@ -5,7 +5,7 @@ import React from 'react'
 function Setting() {
     const {data:session} = useSession();
     const handleSignout = () =>{
-        signOut();
+        signOut({redirect:false});
     }
   return (
     <div>Setting

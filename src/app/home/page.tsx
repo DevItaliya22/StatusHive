@@ -15,25 +15,10 @@ import { useSession } from "next-auth/react";
 
 export default function LandingPage() {
   const { data: session } = useSession();
+  const baseUrl = process.env.NODE_ENV === "development" ? "http://app.localhost:3000" : "https://app.statushive.devitaliya.me";
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <>
-        {session && session.user ? (
-          <>Welcome {session?.user.email}</>
-        ) : (
-          <>Please sign in</>
-        )}
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-      </>
       {/* Header */}
       <header className="flex items-center justify-between px-20 py-10 max-w-6xl mx-auto">
         <Link
@@ -43,10 +28,10 @@ export default function LandingPage() {
           Statushive
         </Link>
         <Link
-          href="https://github.com/username/sealnotes"
+          href={session ? `${baseUrl}/dashboard` : `${baseUrl}/auth/signin`}
           className="flex items-center gap-2 text-black dark:text-white"
         >
-          <TextShimmer duration={2}>Sign in</TextShimmer>
+          <TextShimmer duration={2}>{session ? "Dashboard" :"Sign in"}</TextShimmer>
         </Link>
       </header>
 
@@ -131,7 +116,7 @@ export default function LandingPage() {
         </div>
 
         <div
-          className="text-[0px] md:text-[150px] lg:text-[250px] text-center bg-black w-full m-0 relative" // Added relative positioning
+          className="text-[0px] select-none md:text-[150px] lg:text-[250px] text-center bg-black w-full m-0 relative" // Added relative positioning
           style={{
             // background: "black",  // Removed redundant background
             WebkitBackgroundClip: "text",
