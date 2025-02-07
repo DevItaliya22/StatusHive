@@ -84,7 +84,7 @@ export default async function middleware(req: NextRequest) {
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers
     .get("host")!
-    .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
+    .replace(".localhost:3000", `.${process.env.BASE_DOMAIN}`);
 
 
   const searchParams = req.nextUrl.searchParams.toString();
@@ -94,13 +94,10 @@ export default async function middleware(req: NextRequest) {
   }`;
   console.log("Hostname",hostname);
   console.log("path",path); 
-
   console.log("searchParams",searchParams);
 
-  
-
   // rewrites for app pages
-  if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
+  if (hostname == `app.${process.env.BASE_DOMAIN}`) {
     const session = await getToken({ req });
     if (!session && path !== "/auth/signin") {
       return NextResponse.redirect(new URL("/auth/signin", req.url));
@@ -114,7 +111,7 @@ export default async function middleware(req: NextRequest) {
 
   // rewrite root application to `/home` folder
   if (
-    hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
+    hostname === process.env.BASE_DOMAIN
   ) {
     console.log("Main website - Redirecting / landing page only");
     return NextResponse.rewrite(
