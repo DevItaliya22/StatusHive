@@ -9,6 +9,7 @@ export interface Env {
     PROJECT_ID_VERCEL: string;
     TEAM_ID_VERCEL?: string;
     BASE_DOMAIN: string;
+    NEXTAUTH_URL: string;
 }
 
 export const env: Env = {
@@ -22,6 +23,7 @@ export const env: Env = {
     PROJECT_ID_VERCEL: process.env.PROJECT_ID_VERCEL ?? throwMissingEnv("PROJECT_ID_VERCEL"),
     TEAM_ID_VERCEL: process.env.TEAM_ID_VERCEL,
     BASE_DOMAIN: process.env.BASE_DOMAIN ?? throwMissingEnv("BASE_DOMAIN"),
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? throwMissingEnv("NEXTAUTH_URL"),
 };
 
 function throwMissingEnv(variable: string): never {
