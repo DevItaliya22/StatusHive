@@ -1,13 +1,19 @@
 "use client";
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import React from 'react'
 // https://app.statushive.devitaliya.me/setting page 
 function Setting() {
     const {data:session} = useSession();
+    const handleSignout = () =>{
+        signOut();
+    }
   return (
     <div>Setting
-        {session && session.user ? <>Welcome {session?.user.email}</> : <>Please sign in</>}
+        {session && session.user ? <>Welcome {session?.user.email}
+        <br />
+        <button onClick={handleSignout}> signout </button></> : <>Please sign in</>}
     </div>
+
   )
 }
 
