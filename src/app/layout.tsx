@@ -1,6 +1,7 @@
 "use client";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 export default function RootLayout({
   children,
@@ -9,11 +10,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased`}
-      >
+      <body className={`antialiased`}>
         <SessionProvider>
-          {children}
+          <ThemeProvider attribute="class" defaultTheme="light"> 
+            {children}
+          </ThemeProvider>
         </SessionProvider>
       </body>
     </html>
