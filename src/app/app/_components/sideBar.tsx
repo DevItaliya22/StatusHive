@@ -89,41 +89,6 @@ export function Sidebar() {
           <Collapsible>
             <CollapsibleTrigger className="flex items-center justify-between w-full px-2 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100  rounded-md transition-colors">
               <div className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                <span className={cn("transition-all", !isOpen && "hidden")}>
-                  Settings
-                </span>
-              </div>
-              <ChevronDown
-                className={cn(
-                  "h-4 w-4 transition-transform",
-                  !isOpen && "hidden"
-                )}
-              />
-            </CollapsibleTrigger>
-            <CollapsibleContent
-              className={cn("space-y-1 px-2", !isOpen && "hidden")}
-            >
-              {[
-                { icon: Cog, label: "General", path: "/setting" },
-                { icon: User, label: "User", path: "/setting" },
-              ].map((item) => (
-                <Button
-                  key={item.path}
-                  variant="ghost"
-                  className="w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal text-zinc-700 hover:bg-zinc-100  hover:text-zinc-900"
-                  onClick={() => router.push(item.path)}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Button>
-              ))}
-            </CollapsibleContent>
-          </Collapsible>
-
-          <Collapsible>
-            <CollapsibleTrigger className="flex items-center justify-between w-full px-2 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100  rounded-md transition-colors">
-              <div className="flex items-center gap-2">
                 <Bell className="h-4 w-4" />
                 <span className={cn("transition-all", !isOpen && "hidden")}>
                   Notifications
