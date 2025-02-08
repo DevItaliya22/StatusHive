@@ -58,6 +58,8 @@ model Webhook {
   id                  Int     @id @default(autoincrement())
   discordWebhookUrl   String?
   slackWebhookUrl     String?
+  emailAddresses      String[]
+  emailNotificationOn Boolean @default(false)
   discordNotificationOn Boolean @default(false)
   slackNotificationOn Boolean @default(false)
 }

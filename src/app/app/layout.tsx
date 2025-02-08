@@ -1,8 +1,8 @@
 "use client";
-import "./globals.css";
+import "../globals.css";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Sidebar } from "./app/_components/sideBar";
+import { Sidebar } from "./_components/sideBar";
 
 export default function RootLayout({
   children,
@@ -11,13 +11,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className="antialiased">
         <SessionProvider>
-          <ThemeProvider attribute="class" defaultTheme="light"> 
-            {children}
+          <ThemeProvider attribute="class" defaultTheme="system"> 
+            <div className="flex h-screen">
+              <Sidebar />
+              <div className="flex-1 p-4">{children}</div>
+            </div>
           </ThemeProvider>
         </SessionProvider>
       </body>
     </html>
   );
 }
+
