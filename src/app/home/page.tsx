@@ -39,7 +39,7 @@ export default function LandingPage() {
       <main className="mx-auto">
         <div className="text-center space-y-8 px-4 py-16">
           <Link
-            href="https://github.com/username/sealnotes"
+            href="https://github.com/DevItaliya22/StatusHive"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 text-sm text-gray-900 hover:bg-gray-200"
           >
             <TextShimmer duration={2}>Star us on Github</TextShimmer>
