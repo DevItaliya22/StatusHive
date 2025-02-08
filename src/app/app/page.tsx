@@ -9,8 +9,8 @@ function Home() {
   return (
     <div>
         {session && session.user ? <>Welcome {session?.user.email}</> : <>Please sign in</>}
-
-        <button onClick={()=>router.push("/setting")}>Setting page </button>
+        <br />
+        <button onClick={()=>router.push("/setting")} className='border-2 border-black p-5 dark:text-white dark:bg-black'>Setting page </button>
     </div>
   )
 }
