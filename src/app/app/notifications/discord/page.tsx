@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 const fakeStatusPages = ["statuspage1", "statuspage2", "statuspage3"];
 
 export default function DiscordAlerts() {
-  const [webhooks, setWebhooks] = useState([]);
+  const [webhooks, setWebhooks] = useState<{ name: string; webhookUrl: string; statusPage: string; createdAt: string }[]>([]);
   const [name, setName] = useState("");
   const [webhookUrl, setWebhookUrl] = useState("");
   const [selectedPage, setSelectedPage] = useState(fakeStatusPages[0]);
@@ -20,7 +20,6 @@ export default function DiscordAlerts() {
       statusPage: selectedPage,
       createdAt: new Date().toLocaleString(),
     };
-    // @ts-ignore
     setWebhooks([...webhooks, newWebhook]);
     setName("");
     setWebhookUrl("");
