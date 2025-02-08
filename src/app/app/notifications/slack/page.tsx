@@ -21,7 +21,6 @@ export default function SlackAlerts() {
       statusPage: selectedPage,
       createdAt: new Date().toLocaleString(),
     };
-    // @ts-ignore
     setWebhooks([...webhooks, newWebhook]);
     setName("");
     setWebhookUrl("");
