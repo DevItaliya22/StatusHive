@@ -4,7 +4,7 @@ export const config = {
     runtime: 'edge', // Make this an edge function
   };
   
-  export default async function handler(req:NextRequest) {
+  export async function GET(req:NextRequest) {
     const locationHeader = req.headers.get('X-Vercel-Location');
     
     // Log the location for debugging
