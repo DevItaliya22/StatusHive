@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 
 export const runtime = 'edge';
-export const preferredRegion = ["arn1"];
+export const preferredRegion = ["kix1"];
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
