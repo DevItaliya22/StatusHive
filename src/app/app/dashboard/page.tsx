@@ -15,10 +15,7 @@ export default function MyComponent() {
 
     try {
       const res = await fetch('/api/edge', {
-        method: 'GET',
-        headers: {
-          'X-Vercel-Location': 'sfo1', 
-        },
+        method: 'GET'
       });
 
       if (!res.ok) {
