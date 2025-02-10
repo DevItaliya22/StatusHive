@@ -14,7 +14,7 @@ export default function MyComponent() {
     setError(null);
 
     try {
-      const res = await fetch('/api/edge', {
+      const res = await fetch('/api/edge/arn1', {
         method: 'GET'
       });
 
