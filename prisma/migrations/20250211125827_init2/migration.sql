@@ -10,7 +10,7 @@ CREATE TABLE "User" (
     "name" TEXT,
     "email" TEXT NOT NULL,
     "image" TEXT,
-    "createdAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
     "subscriptionType" "SubscriptionType" NOT NULL DEFAULT 'hobby',
 
@@ -26,7 +26,7 @@ CREATE TABLE "StatusPage" (
     "subdomain" TEXT,
     "customDomain" TEXT,
     "published" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "StatusPage_pkey" PRIMARY KEY ("id")
@@ -35,28 +35,23 @@ CREATE TABLE "StatusPage" (
 -- CreateTable
 CREATE TABLE "Monitor" (
     "id" SERIAL NOT NULL,
-    "statusPageId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "showMonitorStats" BOOLEAN NOT NULL DEFAULT true,
     "active" BOOLEAN NOT NULL DEFAULT true,
     "url" VARCHAR(1024),
     "method" "MonitorMethodsEnum" NOT NULL DEFAULT 'GET',
     "public" BOOLEAN NOT NULL DEFAULT true,
     "ttl" INTEGER NOT NULL DEFAULT 5000,
-    "createdAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
-
-    CONSTRAINT "Monitor_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Webhook" (
-    "id" SERIAL NOT NULL,
-    "discordWebhookUrl" TEXT,
-    "slackWebhookUrl" TEXT,
+    "discordWebhook" TEXT,
+    "slackWebhook" TEXT,
+    "emailNotification" TEXT,
+    "emailNotificationOn" BOOLEAN NOT NULL DEFAULT false,
     "discordNotificationOn" BOOLEAN NOT NULL DEFAULT false,
     "slackNotificationOn" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "Webhook_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Monitor_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -81,4 +76,4 @@ CREATE UNIQUE INDEX "StatusPage_subdomain_customDomain_key" ON "StatusPage"("sub
 ALTER TABLE "StatusPage" ADD CONSTRAINT "StatusPage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Monitor" ADD CONSTRAINT "Monitor_statusPageId_fkey" FOREIGN KEY ("statusPageId") REFERENCES "StatusPage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Monitor" ADD CONSTRAINT "Monitor_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -1,27 +1,16 @@
-"use client";
-import "../globals.css";
-import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { Sidebar } from "./_components/sideBar";
+import type React from "react" 
+import { Sidebar } from "./_components/sideBar"
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="antialiased">
-        <SessionProvider>
-          <ThemeProvider attribute="class" defaultTheme="system"> 
-            <div className="flex h-screen">
-              <Sidebar />
-              <div className="flex-1 p-4">{children}</div>
-            </div>
-          </ThemeProvider>
-        </SessionProvider>
-      </body>
-    </html>
-  );
+    <div className="flex bg-background overflow-y-hidden h-screen">
+      <aside className="w-64 bg-background p-4 flex flex-col">
+        <Sidebar></Sidebar>
+      </aside>
+     
+      <main className="flex-1 overflow-y-auto p-8">{children}</main>
+    </div>
+  )
 }
 
+ 

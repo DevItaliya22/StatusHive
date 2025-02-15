@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -9,22 +10,19 @@ import {
 import { cn } from "@/lib/utils";
 import { useLocation } from "@/hooks/use-location";
 import {
-  ChevronRight,
-  Settings,
   Bell,
   Activity,
   LogOut,
   ChevronDown,
   Menu,
   X,
-  User,
-  Palette,
-  Cog,
   Disc as Discord,
   Mail,
   MessageSquare,
   Moon,
   Sun,
+  Plus,
+  ChevronUp,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import {
@@ -34,6 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 interface StatusItem {
   id: number;
@@ -44,12 +43,14 @@ interface StatusItem {
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
   const [statusItems, setStatusItems] = useState<StatusItem[]>([]);
+  const [monitor, setMonitor] = useState<any>([]);
   const { setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const { navigate } = useLocation();
+  const [isStatusOpen, setIsStatusOpen] = useState<boolean>(false);
+  const [isMonitorOpen , setIsMonitorOpen] = useState<boolean>(false);
   const router = useRouter();
 
-  // Simulate API call for status items
   useEffect(() => {
     setTimeout(() => {
       setStatusItems([
@@ -61,16 +62,32 @@ export function Sidebar() {
     }, 1500);
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setMonitor([
+        { id: 1, name: "Monitor 1", status: "online" },
+        { id: 2, name: "Monitor 2", status: "maintenance" },
+        { id: 3, name: "Monitor 3", status: "offline" },
+      ]);
+      setIsLoading(false);
+    }, 1500);
+  }, []);
+
+  const handleSignOut = () => {
+    signOut();
+    router.push("/auth/signin");
+  };
+
   return (
     <div
       className={cn(
-        "flex flex-col h-screen border-r border-zinc-100  bg-white dark:bg-black transition-all duration-300 ",
+        "flex flex-col h-screen border-r border-zinc-100  bg-white dark:bg-black transition-all duration-300 shadow-lg",
         isOpen ? "w-64" : "w-16"
       )}
     >
       <div className="h-14 flex items-center justify-between px-4 border-b border-zinc-100 ">
         <span
-          className={cn("font-semibold text-zinc-900", !isOpen && "hidden")}
+          className={cn("font-semibold text-zinc-900 select-none", !isOpen && "hidden")}
         >
           Dashboard
         </span>
@@ -131,20 +148,35 @@ export function Sidebar() {
           </Collapsible>
 
           <Collapsible>
-            <CollapsibleTrigger className="flex items-center justify-between w-full px-2 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100  rounded-md transition-colors">
+            <CollapsibleTrigger
+              className="flex items-center justify-between w-full px-2 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors"
+              onClick={() => setIsStatusOpen(!isStatusOpen)}
+            >
               <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4" />
                 <span className={cn("transition-all", !isOpen && "hidden")}>
                   Status
                 </span>
               </div>
-              <ChevronDown
-                className={cn(
-                  "h-4 w-4 transition-transform",
-                  !isOpen && "hidden"
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push("/statuspage");
+                  }}
+                  className="p-1 rounded hover:bg-zinc-200 transition"
+                >
+                  {isOpen  && !isLoading && <Plus className="h-4 w-4 text-zinc-900" /> }
+                  <span className="sr-only">Create Status Page</span> 
+                </button>
+                {isStatusOpen && !isLoading ? (
+                  <ChevronUp className="h-4 w-4 transition-transform" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 transition-transform" />
                 )}
-              />
+              </div>
             </CollapsibleTrigger>
+
             <CollapsibleContent
               className={cn("space-y-1 px-2", !isOpen && "hidden")}
             >
@@ -156,7 +188,64 @@ export function Sidebar() {
                     key={item.id}
                     variant="ghost"
                     className="w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal text-zinc-700 hover:bg-zinc-100  hover:text-zinc-900"
-                    onClick={() => router.push(`/status/${item.id}`)}
+                    onClick={() => router.push(`/statuspage/${item.id}`)}
+                  >
+                    <div
+                      className={cn(
+                        "h-2 w-2 rounded-full",
+                        item.status === "online" && "bg-green-500",
+                        item.status === "offline" && "bg-red-500",
+                        item.status === "maintenance" && "bg-yellow-500"
+                      )}
+                    />
+                    {item.name}
+                  </Button>
+                ))
+              )}
+            </CollapsibleContent>
+          </Collapsible>
+          <Collapsible>
+            <CollapsibleTrigger
+              className="flex items-center justify-between w-full px-2 py-2 text-sm font-medium text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors"
+              onClick={() => setIsMonitorOpen(!isMonitorOpen)}
+            >
+              <div className="flex items-center gap-2">
+                <Activity className="h-4 w-4" />
+                <span className={cn("transition-all", !isOpen && "hidden")}>
+                  Monitors
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push("/monitors");
+                  }}
+                  className="p-1 rounded hover:bg-zinc-200 transition"
+                >
+                  {isOpen  && !isLoading && <Plus className="h-4 w-4 text-zinc-900" /> }
+                  <span className="sr-only">Create Monitors</span> 
+                </button>
+                {isStatusOpen && !isLoading ? (
+                  <ChevronUp className="h-4 w-4 transition-transform" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 transition-transform" />
+                )}
+              </div>
+            </CollapsibleTrigger>
+
+            <CollapsibleContent
+              className={cn("space-y-1 px-2", !isOpen && "hidden")}
+            >
+              {isLoading ? (
+                <div className="text-sm text-zinc-500 py-2">Loading...</div>
+              ) : (
+                monitor.map((item:any) => (
+                  <Button
+                    key={item.id}
+                    variant="ghost"
+                    className="w-full justify-start gap-2 px-2 py-1.5 text-sm font-normal text-zinc-700 hover:bg-zinc-100  hover:text-zinc-900"
+                    onClick={() => router.push(`/monitors/${item.id}`)}
                   >
                     <div
                       className={cn(
@@ -179,13 +268,17 @@ export function Sidebar() {
         <Button
           variant="ghost"
           className="w-full justify-start gap-2 text-zinc-700 hover:bg-zinc-100   hover:text-zinc-900"
+          onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />
-          <span className={cn("transition-all", !isOpen && "hidden")}>
+          <span
+            className={cn("transition-all", !isOpen && "hidden")}
+            onClick={handleSignOut}
+          >
             Logout
           </span>
         </Button>
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
               <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -204,7 +297,7 @@ export function Sidebar() {
               System
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output = "./migrations/client"
 }
 
 datasource db {
@@ -8,61 +9,59 @@ datasource db {
 }
 
 model User {
-  id                Int        @id @default(autoincrement())
-  name              String?
-  email             String     @unique
-  image             String?
-  createdAt         DateTime?
-  updatedAt         DateTime?
-  subscriptionType  SubscriptionType @default(hobby)
+  id               Int              @id @default(autoincrement())
+  name             String?
+  email            String           @unique
+  image            String?
+  createdAt        DateTime?        @default(now())
+  updatedAt        DateTime?        @updatedAt
+  subscriptionType SubscriptionType @default(hobby)
 
-  statusPages       StatusPage[]
+  statusPages StatusPage[]
+  monitors    Monitor[]
 }
 
 model StatusPage {
-  id            Int        @id @default(autoincrement())
-  userId        Int
-  title         String?
-  description   String?    @db.VarChar(1024)
-  
-  subdomain     String?    @unique
-  customDomain  String?    @unique
-  published     Boolean    @default(true)
-  createdAt     DateTime?
-  updatedAt     DateTime?
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  title       String?
+  description String? @db.VarChar(1024)
 
-  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  monitors      Monitor[]
+  subdomain    String?   @unique
+  customDomain String?   @unique
+  published    Boolean   @default(true)
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt
 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([subdomain, customDomain])
   @@index([subdomain], name: "statusPage_subdomain_idx")
   @@index([customDomain], name: "statusPage_custom_domain_idx")
-  @@unique([subdomain, customDomain])
 }
 
 model Monitor {
-  id              Int        @id @default(autoincrement())
-  statusPageId    Int
-  showMonitorStats Boolean   @default(true)
-  active         Boolean    @default(true)
-  url            String?    @db.VarChar(1024)
-  method         MonitorMethodsEnum @default(GET)
-  public         Boolean    @default(true)
-  ttl            Int        @default(5000)
-  createdAt      DateTime?
-  updatedAt      DateTime?
+  id               Int                @id @default(autoincrement())
+  userId           Int
+  showMonitorStats Boolean            @default(true)
+  active           Boolean            @default(true)
+  url              String?            @db.VarChar(1024)
+  method           MonitorMethodsEnum @default(GET)
+  public           Boolean            @default(true)
+  ttl              Int                @default(5000)
+  createdAt        DateTime?          @default(now())
+  updatedAt        DateTime?          @updatedAt
+  discordWebhook   String?
+  slackWebhook     String?
+  emailNotification     String?
+    emailNotificationOn   Boolean  @default(false)
+  discordNotificationOn Boolean  @default(false)
+  slackNotificationOn   Boolean  @default(false)
 
-  statusPage     StatusPage @relation(fields: [statusPageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model Webhook {
-  id                  Int     @id @default(autoincrement())
-  discordWebhookUrl   String?
-  slackWebhookUrl     String?
-  emailAddresses      String[]
-  emailNotificationOn Boolean @default(false)
-  discordNotificationOn Boolean @default(false)
-  slackNotificationOn Boolean @default(false)
-}
+
 
 enum MonitorMethodsEnum {
   GET

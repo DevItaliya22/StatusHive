@@ -15,7 +15,7 @@ export default function MyComponent() {
 
     try {
       const res = await fetch('/api/edge/arn1', {
-        method: 'GET'
+        method: 'POST'
       });
 
       if (!res.ok) {
