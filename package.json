@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:gen": "npx prisma generate",
-    "db:push": "npx prisma push",
+    "db:push": "npx prisma db push",
     "tb:build": "tsc -p tsconfig.build.json",
     "tb:seed": "node ./dist/tinybird/seed.js"
   },
