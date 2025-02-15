@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 export const runtime = 'edge';
 export const preferredRegion = ["kix1"];
 export const dynamic = 'force-dynamic';
@@ -6,22 +6,10 @@ export const dynamic = 'force-dynamic';
 // WIP : Add security , only authorized users can access this route
 export async function POST(req: NextRequest) {
 
-  const locationHeader = req.headers.get('X-Vercel-Location');
-
-  console.log('Request handled by edge location:', locationHeader);
-
   const response = await fetch('https://devitaliya.me');
   const data = await response.text(); 
 
-  return new Response(JSON.stringify({ 
-    data, 
-    locationHeader: locationHeader || "No location header",
-  }), {
-    status: response.status,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  return NextResponse.json({ data });
 }
 
 // import { type NextRequest, NextResponse } from 'next/server';
