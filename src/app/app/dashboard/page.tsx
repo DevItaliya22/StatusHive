@@ -36,7 +36,6 @@ export default function MyComponent() {
       <button onClick={handleClick} disabled={loading}>
         {loading ? 'Loading...' : 'Make Request'}
       </button>
-
       {error && <p>{error}</p>}
       {response && (
         <div>
