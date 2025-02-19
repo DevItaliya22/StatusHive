@@ -50,8 +50,17 @@ CREATE TABLE "Monitor" (
     "emailNotificationOn" BOOLEAN NOT NULL DEFAULT false,
     "discordNotificationOn" BOOLEAN NOT NULL DEFAULT false,
     "slackNotificationOn" BOOLEAN NOT NULL DEFAULT false,
+    "pingLocations" TEXT[],
 
     CONSTRAINT "Monitor_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PingLocations" (
+    "locationName" TEXT NOT NULL,
+    "region" TEXT NOT NULL,
+
+    CONSTRAINT "PingLocations_pkey" PRIMARY KEY ("locationName")
 );
 
 -- CreateIndex
@@ -71,6 +80,9 @@ CREATE INDEX "statusPage_custom_domain_idx" ON "StatusPage"("customDomain");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "StatusPage_subdomain_customDomain_key" ON "StatusPage"("subdomain", "customDomain");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PingLocations_locationName_key" ON "PingLocations"("locationName");
 
 -- AddForeignKey
 ALTER TABLE "StatusPage" ADD CONSTRAINT "StatusPage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
