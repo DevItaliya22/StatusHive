@@ -41,26 +41,32 @@ model StatusPage {
 }
 
 model Monitor {
-  id               Int                @id @default(autoincrement())
-  userId           Int
-  showMonitorStats Boolean            @default(true)
-  active           Boolean            @default(true)
-  url              String?            @db.VarChar(1024)
-  method           MonitorMethodsEnum @default(GET)
-  public           Boolean            @default(true)
-  ttl              Int                @default(5000)
-  createdAt        DateTime?          @default(now())
-  updatedAt        DateTime?          @updatedAt
-  discordWebhook   String?
-  slackWebhook     String?
+  id                    Int                @id @default(autoincrement())
+  userId                Int
+  showMonitorStats      Boolean            @default(true)
+  active                Boolean            @default(true)
+  url                   String?            @db.VarChar(1024)
+  method                MonitorMethodsEnum @default(GET)
+  public                Boolean            @default(true)
+  ttl                   Int                @default(5000)
+  createdAt             DateTime?          @default(now())
+  updatedAt             DateTime?          @updatedAt
+  discordWebhook        String?
+  slackWebhook          String?
   emailNotification     String?
-    emailNotificationOn   Boolean  @default(false)
-  discordNotificationOn Boolean  @default(false)
-  slackNotificationOn   Boolean  @default(false)
+  emailNotificationOn   Boolean            @default(false)
+  discordNotificationOn Boolean            @default(false)
+  slackNotificationOn   Boolean            @default(false)
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  pingLocations       String[] 
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
+model PingLocations {
+  locationName String @unique @id
+  region       String
+}
 
 
 enum MonitorMethodsEnum {

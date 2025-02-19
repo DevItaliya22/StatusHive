@@ -29,22 +29,23 @@ export const getMonitorAggregates = tb.buildPipe({
 
 
 export const getRegionalLatency = tb.buildPipe({
-  pipe: "regional_latency__v1",
+  pipe: "regional_latency",
   parameters: z.object({
     monitor_id: z.number().int(),
     region: z.string(),
     days: z.number().int().default(7),
   }),
-  data: z.array(
-    z.object({
-      time_bucket: z.string(),
-      region: z.string(),
-      avg_latency: z.number(),
-      p95_latency: z.number(),
-      success_count: z.number(),
-      error_count: z.number(),
-    })
-  ),
+  data: z.any(),
+  // z.array(
+  //   z.object({
+  //     time_bucket: z.string(),
+  //     region: z.string(),
+  //     avg_latency: z.number(),
+  //     p95_latency: z.number(),
+  //     success_count: z.number(),
+  //     error_count: z.number(),
+  //   })
+  // ),
 });
 
 export const getRegionalPerformance = tb.buildPipe({
