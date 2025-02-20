@@ -1,16 +1,9 @@
-import Redis from 'ioredis';
-import { env } from '../env/env';
+import { Redis } from '@upstash/redis'
+import { env } from '../env/env'
 
-const RedisSingleton = () => {
-    const redisClient = new Redis(env.REDIS_URL)
-    console.warn('REDIS CLIENT INSTANTIATED');
-    return redisClient;
-}
-
-declare const globalThis : {
-    redisGlobal : ReturnType<typeof RedisSingleton>
-} & typeof global;
-
-const redis = globalThis.redisGlobal ?? RedisSingleton();
+const redis = new Redis({
+  url: env.UPSTASH_REDIS_REST_URL,
+  token:env.UPSTASH_REDIS_REST_TOKEN
+})
 
 export default redis;

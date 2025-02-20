@@ -54,7 +54,7 @@ export default function Email() {
         email,
       });
       if(res.data.success) {
-        alert("Test message sent to Discord");
+        alert("Test message sent to Email");
       }else {
         alert(res.data.error);
       }
