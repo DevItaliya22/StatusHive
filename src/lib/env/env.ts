@@ -11,7 +11,8 @@ export interface Env {
     BASE_DOMAIN: string;
     NEXTAUTH_URL: string;
     RESEND_API_KEY:string;
-    REDIS_URL: string;
+    UPSTASH_REDIS_REST_URL: string;
+    UPSTASH_REDIS_REST_TOKEN: string;
 }
 
 export const env: Env = {
@@ -27,7 +28,8 @@ export const env: Env = {
     BASE_DOMAIN: process.env.BASE_DOMAIN ?? throwMissingEnv("BASE_DOMAIN"),
     NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? throwMissingEnv("NEXTAUTH_URL"),
     RESEND_API_KEY: process.env.RESEND_API_KEY ?? throwMissingEnv("RESEND_API_KEY"),
-    REDIS_URL: process.env.REDIS_URL ?? throwMissingEnv("REDIS_URL"),
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL ?? throwMissingEnv("UPSTASH_REDIS_REST_URL"),
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN ?? throwMissingEnv("UPSTASH_REDIS_REST_TOKEN"),
 };
 
 function throwMissingEnv(variable: string): never {

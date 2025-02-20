@@ -34,7 +34,7 @@ export default function WebhookPage() {
         webhookUrl,
       });
       if(res.data.success) {
-        alert("Test message sent to Discord");
+        alert("Test message sent to Slack");
       }else {
         alert(res.data.error);
       }
