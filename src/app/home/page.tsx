@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star } from "lucide-react";
+import { Star } from 'lucide-react';
 import Link from "next/link";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { TextEffect } from "@/components/ui/text-effect";
@@ -12,10 +12,67 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
   const { data: session } = useSession();
   const baseUrl = process.env.NODE_ENV === "development" ? "http://app.localhost:3000" : "https://app.statushive.devitaliya.me";
+
+  const [subdomain, setSubdomain] = useState("");
+  const debouncedSubdomain = useDebounce<string>(subdomain, 200);
+  const [isSubdomainAvailable, setIsSubdomainAvailable] = useState<
+  boolean | null
+>(null);
+const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
+  const [errors, setErrors] = useState<{subdomain:string}>({subdomain:""});
+  const [availMsg, setAvailMsg] = useState<string>("");
+  const [waitingMsg, setWaitingMsg] = useState<string>("");
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkSubdomain = async () => {
+      if (!debouncedSubdomain) {
+        setIsSubdomainAvailable(null);
+        setWaitingMsg("");
+        return;
+      }
+      setIsCheckingSubdomain(true);
+      setWaitingMsg("Checking availability...");
+      try {
+        const response = await axios.get(
+          `/api/subdomain/available?subdomain=${debouncedSubdomain}`
+        );
+
+        setIsSubdomainAvailable(response.data.available);
+        if (response.data.available === false) {
+          setErrors((prev) => ({
+            subdomain: "Subdomain is already taken by someone else",
+          }));
+          setWaitingMsg("");
+        } else {
+          setErrors((prev) => ({
+            subdomain: "",
+          }));
+          setWaitingMsg("Subdomain is available!");
+        }
+      } catch (error) {
+        console.error("Error checking subdomain:", error);
+        setErrors((prev) => ({
+          subdomain:
+            "Subdomain should be longer than 3 letters and only alphabets are allowed.",
+        }));
+        setIsSubdomainAvailable(false);
+        setWaitingMsg("");
+      } finally {
+        setIsCheckingSubdomain(false);
+      }
+    };
+
+    checkSubdomain();
+  }, [debouncedSubdomain]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
@@ -63,13 +120,29 @@ export default function LandingPage() {
               <Input
                 type="text"
                 placeholder="subdomain"
-                className="flex-1 min-w-6 border-0 border-b-2 border-gray-300 focus:border-b-1 focus:border-gray-500 focus:ring-0 bg-transparent rounded-none"
+                className="flex-1 min-w-6 border-0 border-b-2 border-gray-300  bg-transparent rounded-none focus:border-none focus:ring-0 focus:border-transparent"
+                onChange={(e) => setSubdomain(e.target.value.toLocaleLowerCase())}  
               />
               <span className="text-black dark:text-white whitespace-nowrap px-2 font-bold">
                 .statushive.devitaliya.me
               </span>
+              
             </div>
-            <Button>Claim your subdomain</Button>
+            
+            {waitingMsg && (
+              <span className="text-gray-500 text-sm">{waitingMsg}</span>
+            )}
+            {!waitingMsg && errors.subdomain && (
+              <span className="text-red-500 text-sm">{errors.subdomain}</span>
+            )}
+            {!waitingMsg && isSubdomainAvailable === true && (
+              <span className="text-green-500 text-sm">Subdomain is available</span>
+            )}
+            <Button
+            >
+              <Link href={session?.user ? `https://app.statushive.devitaliya.me/statuspage?subdomain=${subdomain}`:`https://app.statushive.devitaliya.me/auth/signin`} className="text-white">
+              Claim your subdomain
+              </Link></Button>
           </div>
         </div>
 
@@ -81,7 +154,7 @@ export default function LandingPage() {
               </AccordionTrigger>
               <AccordionContent>
                 You can easily create a status page by signing up and selecting
-                a template. From there, customize the page with your brand’s
+                a template. From there, customize the page with your brand&aops;s
                 identity and configure monitoring for your services.
               </AccordionContent>
             </AccordionItem>
@@ -116,30 +189,24 @@ export default function LandingPage() {
         </div>
 
         <div
-          className="text-[0px] select-none md:text-[150px] lg:text-[250px] text-center bg-black w-full m-0 relative" // Added relative positioning
+          className="text-[0px] select-none md:text-[150px] lg:text-[250px] text-center bg-black w-full m-0 relative"
           style={{
-            // background: "black",  // Removed redundant background
             WebkitBackgroundClip: "text",
-            MozBackgroundClip: "text", // Add for Firefox
+            MozBackgroundClip: "text",
             backgroundClip: "text",
             color: "transparent",
-            backgroundImage: "linear-gradient(to bottom, #000, #fff)", // Gradient from white to gray
-            border: "2px solid transparent", // Ensure border is transparent
-            // borderColor: "transparent", // Removed redundant borderColor
-            // backgroundOrigin: "border-box", // Removed - not needed with backgroundClip: text
-            // backgroundClip: "content-box, border-box", // Simplified to backgroundClip: text
-            // boxShadow: "2px 1000px 1px black inset", // Removed boxShadow for now
-            zIndex: 1, // Ensure text is above the border
+            backgroundImage: "linear-gradient(to bottom, #000, #fff)",
+            border: "2px solid transparent",
+            zIndex: 1, 
           }}
         >
           StatusHive
           <div
-            className="absolute inset-0 rounded-lg pointer-events-none" // Overlay for the border effect
+            className="absolute inset-0 rounded-lg pointer-events-none" 
             style={{
-              // background: "linear-gradient(to top, white, rgba(255,255,255,0))", // Adjust gradient for shine
               mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               maskComposite: "xor",
-              zIndex: 0, // Place border behind the text
+              zIndex: 0, 
             }}
           />
         </div>
