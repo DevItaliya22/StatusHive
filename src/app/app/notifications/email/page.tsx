@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import axios from "axios";
 
 const fakeMonitors = [
   {
@@ -47,13 +48,21 @@ export default function Email() {
     alert("Email notification added successfully");
   };
 
-  const handleTest = () => {
-    if (!email) {
-      alert("Please enter an email first");
-      return;
+  const handleTest = async () => {
+    try {
+      const res = await axios.post("/api/notifications/test/email", {
+        email,
+      });
+      if(res.data.success) {
+        alert("Test message sent to Discord");
+      }else {
+        alert(res.data.error);
+      }
+    } catch (e) {
+      console.log(e);
     }
-    alert("Test email sent!");
   };
+
 
   const toggleMonitorSelection = (monitorId: string) => {
     setSelectedMonitors((prevSelected) =>

@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ExternalLink, AlertCircle } from "lucide-react"
 import Link from "next/link"
+import axios from "axios"
 
 const fakeMonitors = [
   { id: "monitor1", name: "Production API", url: "https://api.example.com", status: "active" },
@@ -27,13 +28,20 @@ export default function WebhookPage() {
     alert("Webhook added successfully")
   }
 
-  const handleTest = () => {
-    if (!webhookUrl) {
-      alert("Please enter a webhook URL first")
-      return
+  const handleTest = async () => {
+    try {
+      const res = await axios.post("/api/notifications/test/slack", {
+        webhookUrl,
+      });
+      if(res.data.success) {
+        alert("Test message sent to Discord");
+      }else {
+        alert(res.data.error);
+      }
+    } catch (e) {
+      console.log(e);
     }
-    alert("Test webhook sent!")
-  }
+  };
 
   const toggleMonitorSelection = (monitorId: string) => {
     setSelectedMonitors((prevSelected) =>

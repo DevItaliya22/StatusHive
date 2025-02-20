@@ -10,6 +10,8 @@ export interface Env {
     TEAM_ID_VERCEL?: string;
     BASE_DOMAIN: string;
     NEXTAUTH_URL: string;
+    RESEND_API_KEY:string;
+    REDIS_URL: string;
 }
 
 export const env: Env = {
@@ -24,6 +26,8 @@ export const env: Env = {
     TEAM_ID_VERCEL: process.env.TEAM_ID_VERCEL,
     BASE_DOMAIN: process.env.BASE_DOMAIN ?? throwMissingEnv("BASE_DOMAIN"),
     NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? throwMissingEnv("NEXTAUTH_URL"),
+    RESEND_API_KEY: process.env.RESEND_API_KEY ?? throwMissingEnv("RESEND_API_KEY"),
+    REDIS_URL: process.env.REDIS_URL ?? throwMissingEnv("REDIS_URL"),
 };
 
 function throwMissingEnv(variable: string): never {
