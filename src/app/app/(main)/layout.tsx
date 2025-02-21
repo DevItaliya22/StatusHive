@@ -1,4 +1,4 @@
-import { AppSidebar } from "../_components/sideBar"
+import { AppSidebar } from "./_components/sideBar"
 
 export  default async function Page({ children }: { children: React.ReactNode }) {
   return (
