@@ -10,10 +10,29 @@ import Link from "next/link"
 import axios from "axios"
 
 const fakeMonitors = [
-  { id: "monitor1", name: "Production API", url: "https://api.example.com", status: "active" },
-  { id: "monitor2", name: "Marketing Website", url: "https://www.example.com", status: "active" },
-  { id: "monitor3", name: "Customer Dashboard", url: "https://dashboard.example.com", status: "active" },
-]
+  {
+    id: "monitor1",
+    name: "Production API",
+    url: "https://api.example.com",
+    status: "active",
+    current: "discord",
+  },
+  {
+    id: "monitor2",
+    name: "Marketing Website",
+    url: "https://www.example.com",
+    status: "active",
+    current: "none",
+  },
+  {
+    id: "monitor3",
+    name: "Customer Dashboard",
+    url: "https://dashboard.example.com",
+    status: "active",
+    current: "slack",
+  },
+];
+
 
 export default function WebhookPage() {
   const [webhookUrl, setWebhookUrl] = useState("")
@@ -76,6 +95,9 @@ export default function WebhookPage() {
 
           <div className="space-y-3">
             <label className="text-sm font-medium">Select Monitors</label>
+            <div className="text-xs text-muted-foreground truncate">
+              This will overwrite the current notification settings
+            </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {fakeMonitors.map((monitor) => (
                 <Card
@@ -89,6 +111,9 @@ export default function WebhookPage() {
                     <div className="space-y-2">
                       <div className="font-medium">{monitor.name}</div>
                       <div className="text-xs text-muted-foreground truncate">{monitor.url}</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        Current Notification : {monitor.current}
+                      </div>
                       <div className="flex items-center gap-2">
                         <div className="h-2 w-2 rounded-full bg-green-500" />
                         <span className="text-xs text-muted-foreground capitalize">{monitor.status}</span>

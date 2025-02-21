@@ -56,16 +56,22 @@ export default function MonitorForm() {
         },
         body: JSON.stringify(values),
       })
-
+  
       if (!response.ok) {
         throw new Error("Failed to create monitor")
       }
-
-      toast.success("Monitor created successfully")
-      router.refresh()
-      router.push("/app/monitors")
+  
+      toast.success("Monitor created successfully", {
+        description: `Monitor "${values.name}" has been created.`,
+      })
+  
+      // Optionally, you can reset the form or redirect the user
+      form.reset()
+      // Or redirect: router.push('/monitors')
     } catch (error) {
-      toast.error("Something went wrong")
+      toast.error("Failed to create monitor", {
+        description: "Please try again or contact support if the problem persists.",
+      })
       console.error(error)
     } finally {
       setIsSubmitting(false)

@@ -2,6 +2,7 @@
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { Toaster } from 'sonner'
 
 export default function RootLayout({
   children,
@@ -14,6 +15,7 @@ export default function RootLayout({
         <SessionProvider>
           <ThemeProvider attribute="class" defaultTheme="light"> 
             {children}
+            <Toaster></Toaster>
           </ThemeProvider>
         </SessionProvider>
       </body>
