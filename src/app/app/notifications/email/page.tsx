@@ -13,18 +13,21 @@ const fakeMonitors = [
     name: "Production API",
     url: "https://api.example.com",
     status: "active",
+    current: "discord",
   },
   {
     id: "monitor2",
     name: "Marketing Website",
     url: "https://www.example.com",
     status: "active",
+    current: "none",
   },
   {
     id: "monitor3",
     name: "Customer Dashboard",
     url: "https://dashboard.example.com",
     status: "active",
+    current: "slack",
   },
 ];
 
@@ -53,16 +56,15 @@ export default function Email() {
       const res = await axios.post("/api/notifications/test/email", {
         email,
       });
-      if(res.data.success) {
+      if (res.data.success) {
         alert("Test message sent to Email");
-      }else {
+      } else {
         alert(res.data.error);
       }
     } catch (e) {
       console.log(e);
     }
   };
-
 
   const toggleMonitorSelection = (monitorId: string) => {
     setSelectedMonitors((prevSelected) =>
@@ -103,8 +105,11 @@ export default function Email() {
 
           <div className="space-y-3">
             <label className="text-sm font-medium">Select Monitors</label>
+            <div className="text-xs text-muted-foreground truncate">
+              This will overwrite the current notification settings
+            </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {fakeMonitors.map((monitor) => (
+              {fakeMonitors.map((monitor: any) => (
                 <Card
                   key={monitor.id}
                   className={`cursor-pointer transition-colors hover:bg-accent ${
@@ -119,6 +124,9 @@ export default function Email() {
                       <div className="font-medium">{monitor.name}</div>
                       <div className="text-xs text-muted-foreground truncate">
                         {monitor.url}
+                      </div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        Current Notification : {monitor.current}
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="h-2 w-2 rounded-full bg-green-500" />

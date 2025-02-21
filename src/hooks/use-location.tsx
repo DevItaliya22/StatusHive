@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export function useLocation() {
-  const [pathname, setPathname] = useState('/settings/general');
+  const [pathname, setPathname] = useState('/');
 
   return { 
     pathname,

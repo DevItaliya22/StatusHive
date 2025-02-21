@@ -69,6 +69,7 @@ export default function StatusPage() {
     try {
       // Your API call here
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+      console.log(formData)
       alert("Status page created successfully!");
       // Reset form or redirect
     } catch (error) {

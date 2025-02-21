@@ -7,7 +7,7 @@ import { MonitorMethodsEnum } from "@prisma/client"
 
 const createMonitorSchema = z.object({
     name: z.string().min(2),
-    tags: z.string(),
+    tags: z.string().optional(),
     active: z.boolean(),
     httpMethod: z.enum(["GET", "POST"]),
     url: z.string().url(),
@@ -68,6 +68,8 @@ export async function POST(req: NextRequest) {
 
         const json = await req.json();
         const body = createMonitorSchema.parse(json)
+
+        console.log(body)
 
         const monitor = await prisma.monitor.create({
             data: {

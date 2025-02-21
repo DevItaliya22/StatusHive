@@ -6,10 +6,16 @@ export const dynamic = 'force-dynamic';
 // WIP : Add security , only authorized users can access this route
 export async function POST(req: NextRequest) {
 
-  const response = await fetch('https://devitaliya.me');
+  const body = await req.json();
+  const {url} = body;
+
+  console.time('fetch');
+  const response = await fetch(url);
+  console.timeEnd('fetch');
+
   const data = await response.text(); 
 
-  return NextResponse.json({ data });
+  return NextResponse.json({ data ,time: 'fetch' });
 }
 
 // import { type NextRequest, NextResponse } from 'next/server';
