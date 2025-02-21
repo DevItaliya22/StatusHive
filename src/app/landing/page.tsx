@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star } from 'lucide-react';
+import { Star } from "lucide-react";
 import Link from "next/link";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 import { TextEffect } from "@/components/ui/text-effect";
@@ -19,15 +19,20 @@ import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
   const { data: session } = useSession();
-  const baseUrl = process.env.NODE_ENV === "development" ? "http://app.localhost:3000" : "https://app.statushive.devitaliya.me";
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "http://app.localhost:3000"
+      : "https://app.statushive.devitaliya.me";
 
   const [subdomain, setSubdomain] = useState("");
   const debouncedSubdomain = useDebounce<string>(subdomain, 200);
   const [isSubdomainAvailable, setIsSubdomainAvailable] = useState<
-  boolean | null
->(null);
-const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
-  const [errors, setErrors] = useState<{subdomain:string}>({subdomain:""});
+    boolean | null
+  >(null);
+  const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
+  const [errors, setErrors] = useState<{ subdomain: string }>({
+    subdomain: "",
+  });
   const [availMsg, setAvailMsg] = useState<string>("");
   const [waitingMsg, setWaitingMsg] = useState<string>("");
   const router = useRouter();
@@ -73,9 +78,8 @@ const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
 
     checkSubdomain();
   }, [debouncedSubdomain]);
-
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-transparent dark:bg-black">
       {/* Header */}
       <header className="flex items-center justify-between px-20 py-10 max-w-6xl mx-auto">
         <Link
@@ -88,7 +92,9 @@ const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
           href={session ? `${baseUrl}/dashboard` : `${baseUrl}/auth/signin`}
           className="flex items-center gap-2 text-black dark:text-white"
         >
-          <TextShimmer duration={2}>{session ? "Dashboard" :"Sign in"}</TextShimmer>
+          <TextShimmer duration={2}>
+            {session ? "Dashboard" : "Sign in"}
+          </TextShimmer>
         </Link>
       </header>
 
@@ -121,14 +127,15 @@ const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
                 type="text"
                 placeholder="subdomain"
                 className="flex-1 min-w-6 border-0 border-b-2 border-gray-300  bg-transparent rounded-none focus:border-none focus:ring-0 focus:border-transparent"
-                onChange={(e) => setSubdomain(e.target.value.toLocaleLowerCase())}  
+                onChange={(e) =>
+                  setSubdomain(e.target.value.toLocaleLowerCase())
+                }
               />
               <span className="text-black dark:text-white whitespace-nowrap px-2 font-bold">
                 .statushive.devitaliya.me
               </span>
-              
             </div>
-            
+
             {waitingMsg && (
               <span className="text-gray-500 text-sm">{waitingMsg}</span>
             )}
@@ -136,13 +143,22 @@ const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
               <span className="text-red-500 text-sm">{errors.subdomain}</span>
             )}
             {!waitingMsg && isSubdomainAvailable === true && (
-              <span className="text-green-500 text-sm">Subdomain is available</span>
+              <span className="text-green-500 text-sm">
+                Subdomain is available
+              </span>
             )}
-            <Button
-            >
-              <Link href={session?.user ? `https://app.statushive.devitaliya.me/statuspage?subdomain=${subdomain}`:`https://app.statushive.devitaliya.me/auth/signin`} className="text-white">
-              Claim your subdomain
-              </Link></Button>
+            <Button>
+              <Link
+                href={
+                  session?.user
+                    ? `https://app.statushive.devitaliya.me/statuspage?subdomain=${subdomain}`
+                    : `https://app.statushive.devitaliya.me/auth/signin`
+                }
+                className="text-white"
+              >
+                Claim your subdomain
+              </Link>
+            </Button>
           </div>
         </div>
 
@@ -154,8 +170,9 @@ const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
               </AccordionTrigger>
               <AccordionContent>
                 You can easily create a status page by signing up and selecting
-                a template. From there, customize the page with your brand&aops;s
-                identity and configure monitoring for your services.
+                a template. From there, customize the page with your
+                brand&aops;s identity and configure monitoring for your
+                services.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
@@ -197,16 +214,16 @@ const [isCheckingSubdomain, setIsCheckingSubdomain] = useState(false);
             color: "transparent",
             backgroundImage: "linear-gradient(to bottom, #000, #fff)",
             border: "2px solid transparent",
-            zIndex: 1, 
+            zIndex: 1,
           }}
         >
           StatusHive
           <div
-            className="absolute inset-0 rounded-lg pointer-events-none" 
+            className="absolute inset-0 rounded-lg pointer-events-none"
             style={{
               mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               maskComposite: "xor",
-              zIndex: 0, 
+              zIndex: 0,
             }}
           />
         </div>

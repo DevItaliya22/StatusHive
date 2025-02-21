@@ -15,7 +15,6 @@ export default async function middleware(req: NextRequest) {
     cookieStore.set("next-auth.session-token",process.env.LOCAL_SESSION_TOKEN! || "NOT-FOUND" ,{
       domain : "app.localhost",
       path : "/",
-
     })
   }
   
@@ -40,13 +39,13 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
-  // rewrite root application to `/home` folder
+  // rewrite root application to `/landing` folder
   if (
     hostname === process.env.BASE_DOMAIN
   ) {
     console.log("Main website - Redirecting / landing page only");
     return NextResponse.rewrite(
-      new URL(`/home${path === "/" ? "" : path}`, req.url),
+      new URL(`/landing${path === "/" ? "" : path}`, req.url),
     );
   }
 
