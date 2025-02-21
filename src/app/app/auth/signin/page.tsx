@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ChromeIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
-
+export const dynamic = 'force-dynamic'
 export default function SigninPage() {
     const url = `url(/bg${Math.floor(Math.random() * 4) + 1}.png)`
   return (
