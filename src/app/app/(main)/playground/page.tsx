@@ -2,6 +2,7 @@
 import { useState } from "react";
 
 export default function EdgeApiButtons() {
+
     const [url, setUrl] = useState("");
     const locations = [
         "arn1", "bom1", "cdg1", "cle1", "cpt1", "dub1", "fra1", "gru1", "hkg1",

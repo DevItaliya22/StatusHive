@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type CollapseState = {
@@ -48,6 +48,7 @@ type CollapseState = {
 };
 
 export function AppSidebar({ className }: { className?: string }) {
+  const pathname = usePathname();
   const { data: session } = useSession();
   const [isCollapsed, setIsCollapsed] = useState<CollapseState>({
     notification: false,
@@ -82,6 +83,10 @@ export function AppSidebar({ className }: { className?: string }) {
     router.push(route);
   }
 
+  if(pathname === "/auth/signin"){
+    return null;
+  }
+  
   return (
     <SidebarProvider className={className}>
       <Sidebar className="border-r bg-white">

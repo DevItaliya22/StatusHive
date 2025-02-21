@@ -1,6 +1,6 @@
-import { AppSidebar } from "./_components/sideBar"
+import { AppSidebar } from "../_components/sideBar"
 
-export default function Page({ children }: { children: React.ReactNode }) {
+export  default async function Page({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <AppSidebar className="max-w-[20vw]" />
