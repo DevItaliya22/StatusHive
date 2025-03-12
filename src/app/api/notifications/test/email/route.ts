@@ -31,6 +31,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Invalid email format" });
     }
 
+    const isTested = await prisma.testedEmail.findUnique({
+      where: {
+        email: validatedData.data.email,
+        userId: user.id
+      }
+    })
+
+    if (isTested) {
+      return NextResponse.json({ success: false, error: "Email already tested" })
+    }
+
     const key = `${user.id}-email`;
     const limit = 3;
     const window = 60;
@@ -46,6 +57,17 @@ export async function POST(req: NextRequest) {
       subject: "🚀 Test Email",
       html: "<h1>Hello from Statushive</h1><p>This is a test message from Statushive, ensuring this email is working...</p>",
     });
+
+    try {
+      await prisma.testedEmail.create({
+        data: {
+          email: validatedData.data.email,
+          userId: user.id,
+        },
+      });
+    } catch (e) {
+      return NextResponse.json({ success: false, error: "Already tested" });
+    }
 
     return NextResponse.json({ success: true, messageId: response });
   } catch (e) {
