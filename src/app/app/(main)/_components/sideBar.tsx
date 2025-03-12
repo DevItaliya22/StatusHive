@@ -40,6 +40,10 @@ import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Monitor } from "@prisma/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type CollapseState = {
   notification: boolean;
@@ -70,11 +74,13 @@ export function AppSidebar({ className }: { className?: string }) {
     { id: "sp-3", name: "Customer Portal" },
   ];
 
-  const monitors = [
-    { id: "mon-1", name: "Website Uptime", status: "green" },
-    { id: "mon-2", name: "API Response Time", status: "red" },
-    { id: "mon-3", name: "Database Health", status: "green" },
-  ];
+  const {data:monitors, isLoading:monitorsLoading} = useQuery({
+    queryKey:["monitors"],
+    queryFn:async()=>{
+      const res = await axios.get("/api/monitors")
+      return res.data.monitors;
+    }
+  })
 
   const toggleCollapse = (section: keyof CollapseState) =>
     setIsCollapsed((prev) => ({ ...prev, [section]: !prev[section] }));
@@ -149,7 +155,7 @@ export function AppSidebar({ className }: { className?: string }) {
             {!isCollapsed.notification && (
               <SidebarGroupContent className="flex">
                 <div className="pl-6">
-                  <Separator className="bg-gray-400" orientation="vertical" />
+                  <Separator className="bg-gray-600" orientation="vertical" />
                 </div>
                 <SidebarMenu>
                   {notifications.map(({ title, icon: Icon }) => (
@@ -210,7 +216,7 @@ export function AppSidebar({ className }: { className?: string }) {
             {!isCollapsed.statusPage && (
               <SidebarGroupContent className="flex">
                 <div className="pl-6">
-                  <Separator className="bg-gray-400" orientation="vertical" />
+                  <Separator className="bg-gray-600" orientation="vertical" />
                 </div>
                 <SidebarMenu>
                   {statuspages.map((page) => (
@@ -273,16 +279,28 @@ export function AppSidebar({ className }: { className?: string }) {
             {!isCollapsed.monitor && (
               <SidebarGroupContent className="flex">
                 <div className="pl-6">
-                  <Separator className="bg-gray-400" orientation="vertical" />
+                  <Separator className="bg-gray-600" orientation="vertical" />
                 </div>
                 <SidebarMenu>
-                  {monitors.map((monitor) => (
-                    <SidebarMenuItem key={monitor.id}>
-                      <SidebarMenuButton className="w-full pl-6 text-gray-700 hover:bg-gray-100" onClick={()=>handleRouting(`/monitors/${monitor.id}`)}>
-                        <div className="flex items-center gap-2">
+                  {monitorsLoading ? (
+                    [...Array(3)].map((_, i) => (
+                      <SidebarMenuItem key={i}>
+                        <SidebarMenuButton className="w-full pl-6 text-gray-700">
+                          <div className="flex items-center gap-2">
+                            <Skeleton className="size-2 rounded-full" />
+                            <Skeleton className="h-4 w-24" />
+                          </div>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))
+                  ) : (monitors.length>0 && 
+                      monitors?.map((monitor:Monitor) => (
+                      <SidebarMenuItem key={monitor.id}>
+                        <SidebarMenuButton className="w-full pl-6 text-gray-700 hover:bg-gray-100" onClick={()=>handleRouting(`/monitors/${monitor.id}`)}>
+                          <div className="flex items-center gap-2">
                           <div
                             className={`size-2 rounded-full ${
-                              monitor.status === "green"
+                              monitor.active
                                 ? "bg-green-500"
                                 : "bg-red-500"
                             }`}
@@ -291,7 +309,7 @@ export function AppSidebar({ className }: { className?: string }) {
                         </div>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
-                  ))}
+                    )))}
                 </SidebarMenu>
               </SidebarGroupContent>
             )}

@@ -9,34 +9,10 @@ import { Check, X, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useDebounce } from "@/hooks/use-debounce";
-
-// Fake monitor data
-const fakeMonitors = [
-  {
-    id: "monitor1",
-    name: "Production API",
-    url: "https://api.example.com",
-    status: "active",
-  },
-  {
-    id: "monitor2",
-    name: "Marketing Website",
-    url: "https://www.example.com",
-    status: "active",
-  },
-  {
-    id: "monitor3",
-    name: "Customer Dashboard",
-    url: "https://dashboard.example.com",
-    status: "active",
-  },
-  {
-    id: "monitor4",
-    name: "Database Cluster",
-    url: "https://db.example.com",
-    status: "active",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { Monitor } from "@prisma/client";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 interface FormData {
   title: string;
@@ -61,20 +37,28 @@ export default function StatusPage() {
 
   const debouncedSubdomain = useDebounce(formData.subdomain, 500);
 
-  
+  const {
+    data: monitors,
+    isLoading:monitorsLoading,
+    error,
+  } = useQuery({
+    queryKey: ["monitors"],
+    queryFn: async () => {
+      const response = await axios.get("/api/monitors");
+      return response.data.monitors;
+    },
+  });
+
   const handleSubmit = async () => {
     if (!validateForm() || isSubmitting) return;
-
     setIsSubmitting(true);
     try {
-      // Your API call here
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
-      console.log(formData)
-      alert("Status page created successfully!");
-      // Reset form or redirect
+      const res = await axios.post("/api/statuspage",formData)
+      console.log(res.data)
+      toast.success("Status page created successfully!");
     } catch (error) {
       console.error("Error creating status page:", error);
-      alert("Error creating status page");
+      toast.error("Error creating status page");
     } finally {
       setIsSubmitting(false);
     }
@@ -264,15 +248,26 @@ export default function StatusPage() {
           <div className="space-y-3">
             <label className="text-sm font-medium">Select Monitors</label>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {fakeMonitors.map((monitor) => (
+              {monitorsLoading ? (
+                [...Array(3)].map((_, i) => (
+                  <Card key={i} className="cursor-pointer transition-colors hover:bg-accent">
+                    <CardContent className="p-4">
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-24" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (monitors && monitors?.map((monitor:Monitor) => (
                 <Card
                   key={monitor.id}
                   className={cn(
                     "cursor-pointer transition-colors hover:bg-accent",
-                    formData.selectedMonitors.includes(monitor.id) &&
+                    formData.selectedMonitors.includes(monitor.id.toString()) &&
                       "border-primary"
                   )}
-                  onClick={() => toggleMonitor(monitor.id)}
+                  onClick={() => toggleMonitor(monitor.id.toString())}
                 >
                   <CardContent className="p-4">
                     <div className="space-y-2">
@@ -283,13 +278,13 @@ export default function StatusPage() {
                       <div className="flex items-center gap-2">
                         <div className="h-2 w-2 rounded-full bg-green-500" />
                         <span className="text-xs text-muted-foreground capitalize">
-                          {monitor.status}
+                          {monitor.active ? "active" : "inactive"}
                         </span>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
+                )))}
             </div>
             {errors.selectedMonitors && (
               <p className="text-sm text-destructive">

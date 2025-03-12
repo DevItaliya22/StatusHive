@@ -2,18 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { ChromeIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useEffect, useState } from "react";
-export default function SigninPage() {
-  const [bgUrl, setBgUrl] = useState("");
 
-  useEffect(() => {
-    setBgUrl(`/bg${Math.floor(Math.random() * 4) + 1}.png`);
-  }, []);
+export default function SigninPage() {
   return (
-    <div
+    <div 
       className="p-0 m-0 w-[100vw] h-[100vh] flex flex-col justify-between items-center relative
         bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: bgUrl }}
+      style={{ backgroundImage: "url(/bg1.png)" }}
     >
       <div className="absolute inset-0 bg-black/50 z-0" />
       <div className="flex-1 flex justify-center items-center w-full z-10">
@@ -21,7 +16,7 @@ export default function SigninPage() {
           <Button
             variant="outline"
             className="flex items-center justify-center gap-2 bg-white text-black border-none hover:bg-gray-200 "
-            onClick={() => signIn("google")}
+            onClick={() => signIn('google')}
           >
             <ChromeIcon className="h-5 w-5" />
             Sign up with Google
@@ -46,8 +41,8 @@ export default function SigninPage() {
       <div className="absolute bottom-4 text-white/50 text-sm z-10 text-center">
         By continuing, you agree to our Terms and Privacy Policy
         <br />
-        Bro there are no such shits as privacy and terms here . Exploit my
-        service as much as you can .
+        Bro there are no such shits as privacy and terms here . 
+        Exploit my service as much as you can .
       </div>
     </div>
   );
