@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
                 url: body.url,
                 method: body.httpMethod === "GET" ? MonitorMethodsEnum.GET : MonitorMethodsEnum.POST,
                 active: body.active,
+                
             },
         })
 

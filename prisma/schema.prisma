@@ -74,9 +74,9 @@ model Monitor {
   slackNotificationOn   Boolean            @default(false)
 
   pingLocations       String[] 
-  statusPageId        Int
+  statusPageId        Int?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  statusPage StatusPage @relation(fields: [statusPageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  statusPage StatusPage? @relation(fields: [statusPageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model PingLocations {
